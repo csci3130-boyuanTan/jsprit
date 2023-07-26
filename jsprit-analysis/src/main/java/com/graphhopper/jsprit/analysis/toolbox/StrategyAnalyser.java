@@ -98,7 +98,7 @@ public class StrategyAnalyser implements AlgorithmEndsListener, StrategySelected
     }
 
     @Override
-    public void informSelectedStrategy(SearchStrategy.DiscoveredSolution discoveredSolution, VehicleRoutingProblem vehicleRoutingProblem, Collection<VehicleRoutingProblemSolution> vehicleRoutingProblemSolutions) {
+    public void informSelectedStrategy(SearchStrategy.DiscoveredSolution discoveredSolution, VehicleRoutingProblem vehicleRoutingProblem, Collection<VehicleRoutingProblemSolution> solutions) {
         String strategyId = discoveredSolution.getStrategyId();
         if (!strategyMap.containsKey(strategyId)) {
             strategyMap.put(strategyId, new Strategy(strategyId));
@@ -106,8 +106,8 @@ public class StrategyAnalyser implements AlgorithmEndsListener, StrategySelected
         Strategy strategy = strategyMap.get(strategyId);
         strategy.selected();
         if (discoveredSolution.isAccepted()) strategy.newSolution();
-        if (isBetter(vehicleRoutingProblemSolutions, last)) {
-            strategy.improvedSolution(getImprovement(vehicleRoutingProblemSolutions, last));
+        if (isBetter(solutions, last)) {
+            strategy.improvedSolution(getImprovement(solutions, last));
 
         }
     }
