@@ -368,8 +368,8 @@ public class Plotter {
         for (int i = 0; i < shipments.getSeriesCount(); i++) {
             shipmentsRenderer.setSeriesPaint(i, Color.DARK_GRAY);
             shipmentsRenderer.setSeriesStroke(i, new BasicStroke(
-                    1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
-                    1.f, new float[]{4.0f, 4.0f}, 0.0f
+                1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
+                1.f, new float[]{4.0f, 4.0f}, 0.0f
             ));
         }
         return shipmentsRenderer;
@@ -571,14 +571,21 @@ public class Plotter {
         activities = new XYSeries("activities", false, true);
         for (Vehicle v : vrp.getVehicles()) {
             Coordinate startCoordinate = getCoordinate(v.getStartLocation().getCoordinate());
-            if (startCoordinate == null) throw new NoLocationFoundException();
+//            if (startCoordinate == null){
+//                throw new NoLocationFoundException();
+//            }
+            assert startCoordinate != null : "NoLocationFoundException";
             XYDataItem item = new XYDataItem(startCoordinate.getX() * scalingFactor, startCoordinate.getY() * scalingFactor);
             markItem(item, Activity.START);
             activities.add(item);
 
+
             if (!v.getStartLocation().getId().equals(v.getEndLocation().getId())) {
                 Coordinate endCoordinate = getCoordinate(v.getEndLocation().getCoordinate());
-                if (endCoordinate == null) throw new NoLocationFoundException();
+//                if (endCoordinate == null) {
+//                    throw new NoLocationFoundException();
+//                }
+                assert endCoordinate != null : "NoLocationFoundException";
                 XYDataItem end_item = new XYDataItem(endCoordinate.getX() * scalingFactor, endCoordinate.getY() * scalingFactor);
                 markItem(end_item, Activity.END);
                 activities.add(end_item);
