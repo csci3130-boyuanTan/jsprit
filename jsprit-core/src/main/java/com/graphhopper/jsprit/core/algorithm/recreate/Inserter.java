@@ -128,6 +128,10 @@ class Inserter {
 
     }
 
+    public InsertionListeners getInsertionListeners() {
+        return insertionListeners;
+    }
+
     private InsertionListeners insertionListeners;
 
     private JobInsertionHandler jobInsertionHandler;
@@ -142,17 +146,19 @@ class Inserter {
     }
 
     public void insertJob(Job job, InsertionData insertionData, VehicleRoute vehicleRoute) {
-        insertionListeners.informBeforeJobInsertion(job, insertionData, vehicleRoute);
+        InsertionListeners listeners = getInsertionListeners();
+        listeners.informBeforeJobInsertion(job, insertionData, vehicleRoute);
 
         if (insertionData == null || (insertionData instanceof NoInsertionFound))
             throw new IllegalStateException("insertionData null. cannot insert job.");
         if (job == null) throw new IllegalStateException("cannot insert null-job");
         if (!(vehicleRoute.getVehicle().getId().equals(insertionData.getSelectedVehicle().getId()))) {
-            insertionListeners.informVehicleSwitched(vehicleRoute, vehicleRoute.getVehicle(), insertionData.getSelectedVehicle());
+            listeners.informVehicleSwitched(vehicleRoute, vehicleRoute.getVehicle(), insertionData.getSelectedVehicle());
             vehicleRoute.setVehicleAndDepartureTime(insertionData.getSelectedVehicle(), insertionData.getVehicleDepartureTime());
         }
         jobInsertionHandler.handleJobInsertion(job, insertionData, vehicleRoute);
 
-        insertionListeners.informJobInserted(job, vehicleRoute, insertionData);
+        listeners.informJobInserted(job, vehicleRoute, insertionData);
     }
+
 }
