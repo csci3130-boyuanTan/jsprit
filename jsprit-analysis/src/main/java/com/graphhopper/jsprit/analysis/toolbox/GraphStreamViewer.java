@@ -385,7 +385,13 @@ public class GraphStreamViewer {
         if (solution != null) {
             int routeId = 1;
             for (VehicleRoute route : solution.getRoutes()) {
-                renderRoute(g, route, routeId, renderDelay_in_ms, label);
+                RenderRouteParams renderRouteParams = new RenderRouteParams();
+                renderRouteParams.setG(g);
+                renderRouteParams.setRoute(route);
+                renderRouteParams.setRouteId(routeId);
+                renderRouteParams.setRenderDelay_in_ms(renderDelay_in_ms);
+                renderRouteParams.setLabel(label);
+                renderRoute(renderRouteParams);
                 sleep(renderDelay_in_ms);
                 routeId++;
             }
@@ -541,7 +547,13 @@ public class GraphStreamViewer {
         }
     }
 
-    private void renderRoute(Graph g, VehicleRoute route, int routeId, long renderDelay_in_ms, Label label) {
+    private void renderRoute(RenderRouteParams renderRouteParams) {
+        Graph g = renderRouteParams.getG();
+        VehicleRoute route = renderRouteParams.getRoute();
+        int routeId = renderRouteParams.getRouteId();
+        long renderDelay_in_ms = renderRouteParams.getRenderDelay_in_ms();
+        Label label = renderRouteParams.getLabel();
+
         int vehicle_edgeId = 1;
         String prevIdentifier = makeId(route.getVehicle().getId(), route.getVehicle().getStartLocation().getId());
         if (label.equals(Label.ACTIVITY) || label.equals(Label.JOB_NAME)) {
